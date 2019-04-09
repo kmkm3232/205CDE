@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SupaMaCat</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="SupaMaCat - New online marketshop in Hong Kong.">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">  
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>  
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='cart.js') }}"></script> 
+</head>
+<body style="background-image: url({{ url_for('static', filename='bg.jpg') }});">
+		<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+			<a class="navbar-brand" href="http://localhost:8000/">SupaMaCat</a>
+			<!--links-->
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="collapsibleNavbar">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="http://localhost:8000/">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="http://localhost:8000/aboutus">About Us</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="http://localhost:8000/ptable">Product List</a>
+					</li>
+				</ul>
+				<ul class="navbar-nav navbar-right">
+					<li class="nav-item">
+						<a href="http://localhost:8000/shoppingcart"><img width="50px" height="50px" src="/static/carts.png"></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="loginarea" href="http://localhost:8000/login">Login</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="registerarea" href="http://localhost:8000/register">Register</a>
+					</li>
+				</ul>
+		</div>
+		</nav>
+		{% block content %}
+			<div>
+				{% for message in get_flashed_messages() %}
+				<div class="alert alert-warning">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					{{ message }}
+				</div>
+				{% endfor %}
+
+				{% block page_content %}{% endblock %}
+			</div>
+		{% endblock %}
+		<div class="container">
+		<h2 style="text-align:center; ">Welcome To SupaMaCat!</h2>
+		<h2>Recommend Product</h2>
+		<div class="row">
+		{% for product in suggest %}
+			<div class="col-lg-3 col-md-4 col-sm-6" class="carrd">
+				<div class="card mb-4" style="max-width: 20rem;">
+				  <div class="card-img-top" style="background: url('static/{{product[4]}}'); background-repeat; background-size: cover; height:200px;width:100%"></div>
+				  <div class="card-body">
+				    <h4 class="card-title">{{ product[1] }}</h4>
+				    <p> $<a class="card-text">{{ product[2] }}</a>
+				    	<form action="/addtocart" method="POST">
+					    	<input type="hidden" name="productname" value="{{ product[1] }}">
+					    	<input type="hidden" name="productprice" value="{{ product[2] }}">
+					    	<input type="hidden" name="productid" value="{{ product[0] }}">
+					    	<input type="number" name="addtocartquantity" min="1" value="0">
+					    	<input type="submit" name="addtocartsubmit" class="btn btn-success" value="Add to Cart">
+				    	</form>
+				    	<a class="hiddenptype">{{ product[3] }}</a><a class="hiddenptype2">{{ product[0] }}</a></p>
+				  </div>
+				</div>
+			</div>
+		{% endfor %}
+		</div>	
+		</div>
+	<div class="footer">
+	<div class="foot-content">@2019 SupaMaCat All reserved.
+	</div>
+	</div>
+<script type="text/javascript">
+var logins = '{{session['logged_in']}}';
+var uaname = '{{session['username']}}';
+var loginarea = document.getElementById('loginarea');
+var registerarea = document.getElementById('registerarea');
+var link = document.getElementById('registerarea');
+if (logins == 'True'){
+	loginarea.innerHTML = "My Account" ;
+	registerarea.innerHTML = 'Logout'
+	link.setAttribute("href", "http://localhost:8000/logout");
+}else{
+	loginarea.innerHTML = 'Login'
+	registerarea.innerHTML = 'Register'
+	link.setAttribute("href", "http://localhost:8000/register");
+}
+</script>
+</body>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='cart.js') }}"></script>
+</html>

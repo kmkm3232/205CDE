@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My Shopping Cart | SupaMaCat</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<meta name="description" content="SupaMaCat - New online marketshop in Hong Kong.">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">  
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>  
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body style="background-image: url({{ url_for('static', filename='bg.jpg') }});">
+
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+	<a class="navbar-brand" href="http://localhost:8000/">SupaMaCat</a>
+	<!--links-->
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="collapsibleNavbar">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item">
+				<a class="nav-link" href="http://localhost:8000/">Home</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="http://localhost:8000/aboutus">About Us</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="http://localhost:8000/ptable">Product List</a>
+			</li>
+		</ul>
+		<ul class="navbar-nav navbar-right">
+			<li class="nav-item">
+				<a href="http://localhost:8000/shoppingcart"><img width="50px" height="50px" src="/static/carts.png"></a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="loginarea" href="http://localhost:8000/login">Login</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="registerarea" href="http://localhost:8000/register">Register</a>
+			</li>
+		</ul>
+</div>
+</nav>
+{% for message in get_flashed_messages() %}
+		<div class="alert alert-warning">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			{{ message }}
+		</div>
+{% endfor %}
+<div class="conn">
+<div class="container">
+	<h2 class="section-header">Shopping Cart</h2>
+	{%  if session['cart']|length %}
+		<div class="list-row">
+			<span class="list-item list-header list-column">PROUDCT</span>
+			<span class="list-item list-header list-column">PRICE</span>
+			<span class="list-item list-header list-column">QUANTITY</span>
+		</div>
+		{% for i in session['cart'] %}
+		<div class="list-row">
+		<div class="list-item list-column">
+			<input type="hidden" value="{{ i[2] }}" id="priceforcal{{ i[0] }}">
+			<span class="list-item-title"id="nameof{{ i[0] }}" >{{ i[1] }}</span>
+		</div>
+		<span class="list-price list-column" id="priceof{{ i[0] }}">${{ i[2] }}</span>
+		<div class="list-quantity list-column">
+			<form action="/update" , method="POST">
+			<input class="list-quantity-input" name="qt" id="quantityof{{ i[0] }}" min="1" type="number" value="{{ i[3] }}">
+			<input type="hidden" value="{{ i[0] }}" name="updateitem">
+			<input type="submit" class="btn btn-success" type="button" value="UPDATE">
+			</form>
+			<form action="/remove" , method="POST">
+			<input type="hidden" value="{{ i[0] }}" name="removeitem">
+			<input type="submit" class="btn btn-danger" type="button" value="REMOVE">
+			</form>
+		</div>
+		</div>
+		{% endfor %}
+		<div class="list-total">
+			<button class="btn btn-success" onclick="cal()">Calulate Total Price</button>
+			<strong class="list-total-title">Total</strong>
+			<span class="list-total-price" id="totaldom">$0</span>
+		</div>
+		<br>
+		<div class="list-checkout">
+			<button class="btn btn-success" onclick="openbox()">Check Out</button>
+		</div>
+	</div>
+	<div id="confirmbox" class="box">
+		<div class="box-content">
+			<p>Payment Details</p>
+				<p>Payment Method: 
+					<label for="raCash">Cash 
+						<input type="radio" id="CashId" name="pm" value="Cash" onclick="ShowCash()">
+					</label>
+					<label for="raCredit">Credit Card
+						<input type="radio" id="CreditId" name="pm" value="Credit Card" onclick="ShowCredit()">
+					</label>
+				</p>
+					<div id="Cashdetail" style="display:none">
+						<form id="paymentform" action="/checkoutCash" method="POST">
+							<p>Select Shop to Take your Product: 
+								<select name="shoplist">
+									<option value="YuenLong">Yuen Long Branch</option>
+									<option value="TuenMun">Tuen Mun Branch</option>
+									<option value="TsuenWan">Tsuen Wan Branch</option>
+									<option value="TsuenWanEast">Tsuen Wan East Branch</option>
+									<option value="KowloonCity">Kowloon City Branch</option>
+									<option value="KowloonTong">Kowloon Tong Branch</option>
+								</select>
+							</p>
+							<p>Product will be available arounds 2-3 work days.</p>
+							<input type="submit" class="btn btn-success" type="button" value="Confirm">
+						</form>
+					</div>
+				
+				<div id="Creditdetail" style="display:none">
+					<form id="paymentform2" action="/checkoutCredit" method="POST">
+						<p>Credit Card Number: 
+							<input type="text" name="creditcardnum" required>
+						</p>
+						<p>Credit Card Due Date: 
+							<input type="date" name="duedate" required>
+						</p>
+						<p>Secure PIN: 
+							<input type="number" name="pin" required max="999">
+						</p>
+						<p>First Name: 
+							<input type="text" name="fname" required>
+						</p>
+						<p>Last Name: 
+							<input type="text" name="lname" required>
+						</p>
+						<p>Address: 
+							<input type="text" name="address" required>
+						</p>
+						<p>Address Line 2: 
+							<input type="text" name="address2" required>
+						</p>
+						<p>Country/Region: 
+							<input type="text" name="countryregion" required>
+						</p>
+						<p>City: 
+							<input type="text" name="city" required>
+						</p>
+						<p>Postal Code: 
+							<input type="number" name="pcode" max="999" required>
+						</p>
+						<p>Phone Number: 
+							<input type="tel" name="phonenum" required>
+						</p>
+						<input type="submit" class="btn btn-success" type="button" value="Confirm">
+					</form>
+				</div>
+				<div class="checkoutconfirm">
+					<button type="button" class="btn btn-danger" onclick="closebox()">Cancel</button>
+				</div>
+		</div>
+	{% else %}
+		<p style="text-align: center;"><img src="/static/emptycart.png" width="350px" height="350px"></p>
+		<p style="text-align: center;">YOUR CART IS EMPTY</p>
+	{% endif %}
+</div>
+</div>
+<div class="footer">
+	<div class="foot-content">@2019 SupaMaCat All reserved.
+	</div>
+</div>
+<script type="text/javascript">
+var logins = '{{session['logged_in']}}';
+var uaname = '{{session['username']}}';
+var loginarea = document.getElementById('loginarea');
+var registerarea = document.getElementById('registerarea');
+var link = document.getElementById('registerarea');
+if (logins == 'True'){
+	loginarea.innerHTML = "My Account" ;
+	registerarea.innerHTML = 'Logout'
+	link.setAttribute("href", "http://localhost:8000/logout");
+}else{
+	loginarea.innerHTML = 'Login'
+	registerarea.innerHTML = 'Register'
+	link.setAttribute("href", "http://localhost:8000/register");
+}
+
+</script>
+<script type="text/javascript" src="{{ url_for('static', filename='cart.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Admin - View All Users | SupaMaCat</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">  
+	<meta name="description" content="SupaMaCat - New online marketshop in Hong Kong.">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">  
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>  
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='cart.js') }}"></script>
+</head>
+<body style="background-image: url({{ url_for('static', filename='bg.jpg') }});">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+	<a class="navbar-brand" href="http://localhost:8000/">SupaMaCat</a>
+	<!--links-->
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="collapsibleNavbar">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item">
+				<a class="nav-link" href="http://localhost:8000/">Home</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="http://localhost:8000/aboutus">About Us</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="http://localhost:8000/ptable">Product List</a>
+			</li>
+		</ul>
+		<ul class="navbar-nav navbar-right">
+			<li class="nav-item">
+				<a href="http://localhost:8000/shoppingcart"><img width="50px" height="50px" src="/static/carts.png"></a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="loginarea" href="http://localhost:8000/login">Login</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="registerarea" href="http://localhost:8000/register">Register</a>
+			</li>
+		</ul>
+</div>
+</nav>
+<div class="conn">
+{% block body %}
+	{% block message %}
+	<div>
+			{% for message in get_flashed_messages() %}
+			<div class="alert alert-warning">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				{{ message }}
+			</div>
+			{% endfor %}
+
+		</div>
+	{% endblock %}
+{% endblock %}
+<span class="PD"><form action="/adminpr"><input type="submit" class="btn btn-dark" name="" value="View Product"></form></span>
+<span class="PD"><form action="/admino"><input type="submit" class="btn btn-dark" name="" value="View Orders"></form></span>
+<span class="PD"><form action="/adminu"><input type="submit" class="btn btn-dark" name="" value="View Users"></form></span>
+<span class="PD"><form action="/adminaddp"><input type="submit" class="btn btn-dark" name="" value="Add New Product"></form></span>
+<span class="PD"><form action="/adminlogout"><input type="submit" class="btn btn-dark" name="" value="Logout as Admin"></form></span>
+<br>
+<br>
+<p class="details"><h1>Admin Panel</h1></p>
+<div class="container">
+	<div class="list-row">
+			<span class="user-item0 user-header list-column">User ID</span>
+			<span class="user-item1 user-header list-column">User Name</span>
+			<span class="user-item2 user-header list-column">User Password</span>
+			<span class="user-item3 user--header list-column">Email</span>
+			<span class="user-item4 user-header list-column">First Name</span>
+			<span class="user-item5 user-header list-column">Last Name</span>
+			<span class="user-item6 user-header list-column">Phone</span>
+			<span class="user-item7 user-header list-column">Address</span>
+			<span class="user-item8 user-header list-column">Date of Birth</span>
+			<span class="user-item9 user-header list-column">Action</span>
+	</div>
+	{% for i in alluser %}
+		<div class="list-row">
+			<div class="user-item0 user-column">
+				<span class="user-item-title"id="nameof{{ i[0] }}" >{{ i[0] }}</span>
+			</div>
+			<span class="user-item1 list-column">{{ i[1] }}</span>
+			<div class="user-item2 list-column">
+				<span class="list-item-title">{{ i[2] }}</span>
+			</div>
+			<div class="user-item3 list-column">
+				<span class="list-item-title">{{ i[3] }}</span>
+			</div>
+			<div class="user-item4 list-column">
+				<span class="list-item-title">{{ i[4] }}</span>
+			</div>
+			<div class="user-item5 list-column">
+				<span class="list-item-title">{{ i[5] }}</span>
+			</div>
+			<div class="user-item6 list-column">
+				<span class="list-item-title">{{ i[6] }}</span>
+			</div>
+			<div class="user-item7 list-column">
+				<span class="list-item-title">{{ i[7] }}</span>
+			</div>
+			<div class="user-item8 list-column">
+				<span class="list-item-title">{{ i[8] }}</span>
+			</div>
+			<div class="user-item9 list-column">
+				<form action="/edituser" method="POST">
+				<input type="hidden" value="{{ i[0] }}" name="edituserbutton">
+				<input type="submit" class="btn btn-success" type="button" value="EDIT">
+				</form>
+				<form action="/removeuser" method="POST">
+				<input type="hidden" value="{{ i[0] }}" name="removeuserbutton">
+				<input type="submit" class="btn btn-danger" type="button" value="DELETE">
+				</form>
+			</div>
+		</div>
+	{% endfor %}
+</div>
+</div>
+<div class="footer">
+	<div class="foot-content">@2019 SupaMaCat All reserved.
+	</div>
+</div>
+<script type="text/javascript">
+	var logins = '{{session['logged_in']}}';
+	var uaname = '{{session['username']}}';
+	var loginarea = document.getElementById('loginarea');
+	var registerarea = document.getElementById('registerarea');
+	var link = document.getElementById('registerarea');
+	if (logins == 'True'){
+		loginarea.innerHTML = "My Account" ;
+		registerarea.innerHTML = 'Logout'
+		link.setAttribute("href", "http://localhost:8000/logout");
+	}else{
+		loginarea.innerHTML = 'Login'
+		registerarea.innerHTML = 'Register'
+		link.setAttribute("href", "http://localhost:8000/register");
+	}
+</script>
+</body>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='cart.js') }}"></script>
+</html>

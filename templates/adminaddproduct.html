@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Admin - Add New Product | SupaMaCat</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">  
+	<meta name="description" content="SupaMaCat - New online marketshop in Hong Kong.">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">  
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>  
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='cart.js') }}"></script> 
+</head>
+<body style="background-image: url({{ url_for('static', filename='bg.jpg') }});">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+	<a class="navbar-brand" href="index.html">SupaMaCat</a>
+	<!--links-->
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="collapsibleNavbar">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item">
+				<a class="nav-link" href="http://localhost:8000/">Home</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="http://localhost:8000/aboutus">About Us</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="http://localhost:8000/ptable">Product List</a>
+			</li>
+		</ul>
+		<ul class="navbar-nav navbar-right">
+			<li class="nav-item">
+				<a href="http://localhost:8000/shoppingcart"><img width="50px" height="50px" src="/static/carts.png"></a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="loginarea" href="http://localhost:8000/login">Login</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="registerarea" href="http://localhost:8000/register">Register</a>
+			</li>
+		</ul>
+</div>
+</nav>
+<div class="conn">
+{% block content %}
+	<div>
+		{% for message in get_flashed_messages() %}
+		<div class="alert alert-warning">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			{{ message }}
+		</div>
+		{% endfor %}
+
+		{% block page_content %}{% endblock %}
+	</div>
+	{% endblock %}
+<div class="container">
+	<h2 class="section-header">Add New Product</h2>
+	<div class="registerarea">
+		<div class="registerform">
+			<form action="/addnewproductform" method='POST'>
+				<p>Product Name</p>
+				<p><input type="text" name="pname" required></p>
+				<p>Product Price</p>
+				<p><input type="number" min="1" step="any" name="pprice" required></p>
+				<p>Product Type</p>
+				<p><input type="text" name="ptype" required>
+				<p>Product Image File Name</p>
+				<p><input type="text" name="pimg" required>
+				<p><input type="submit" name="" class="btn btn-success" value="Submit"></p>
+			</form>
+			<form action="/adminpr"><input type="submit" class="btn btn-danger" value="CANCEL">
+			</form>
+		</div>
+	</div>
+</div>
+</div>
+<div class="footer">
+	<div class="foot-content">@2019 SupaMaCat All reserved.
+	</div>
+</div>
+<script type="text/javascript">
+var logins = '{{session['logged_in']}}';
+var uaname = '{{session['username']}}';
+var loginarea = document.getElementById('loginarea');
+var registerarea = document.getElementById('registerarea');
+var link = document.getElementById('registerarea');
+if (logins == 'True'){
+	loginarea.innerHTML = "My Account" ;
+	registerarea.innerHTML = 'Logout'
+	link.setAttribute("href", "http://localhost:8000/logout");
+}else{
+	loginarea.innerHTML = 'Login'
+	registerarea.innerHTML = 'Register'
+	link.setAttribute("href", "http://localhost:8000/register");
+}
+</script>
+</body>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='cart.js') }}"></script>
+</html>

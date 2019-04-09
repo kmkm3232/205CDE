@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Edit User's Order | SupaMaCat</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">  
+	<meta name="description" content="SupaMaCat - New online marketshop in Hong Kong.">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">  
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>  
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='cart.js') }}"></script>
+</head>
+<body style="background-image: url({{ url_for('static', filename='bg.jpg') }});">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+	<a class="navbar-brand" href="http://localhost:8000/">SupaMaCat</a>
+	<!--links-->
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="collapsibleNavbar">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item">
+				<a class="nav-link" href="http://localhost:8000/">Home</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="http://localhost:8000/aboutus">About Us</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="http://localhost:8000/ptable">Product List</a>
+			</li>
+		</ul>
+		<ul class="navbar-nav navbar-right">
+			<li class="nav-item">
+				<a href="http://localhost:8000/shoppingcart"><img width="50px" height="50px" src="/static/carts.png"></a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="loginarea" href="http://localhost:8000/login">Login</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="registerarea" href="http://localhost:8000/register">Register</a>
+			</li>
+		</ul>
+</div>
+</nav>
+<div class="conn">
+{% block body %}
+	{% block message %}
+	<div>
+			{% for message in get_flashed_messages() %}
+			<div class="alert alert-warning">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				{{ message }}
+			</div>
+			{% endfor %}
+
+		</div>
+	{% endblock %}
+{% endblock %}
+<span class="PD"><form action="/login"><input type="submit" class="btn btn-dark" name="" value="Personal Data"></form></span>
+<span class="PD"><form action="/vieworder"><input type="submit" class="btn btn-dark" name="" value="Order History"></form></span>
+<p class="details"><h1>Order ID: {{ targetoid }} |
+Payment Method: {{ paymentmethod[0] }}</h1></p>
+<div class="container">
+		<div class="col1">
+			<div class="cart-row">
+				<span class="edit-item cart-header cart-column">Item</span>
+				<span class="edit-item cart-header cart-column">Price</span>
+			</div>
+			{% for i in orderedproduct %}
+				<div class="cart-row">
+					<div class="edit-item cart-column">
+						<input type="hidden" value="{{ i[2] }}" id="priceforcal{{ i[0] }}">
+						<span class="cart-item-title"id="nameof{{ i[0] }}" >{{ i[1] }}</span>
+					</div>
+					<span class="edit-price cart-column" id="priceof{{ i[0] }}">${{ i[2] }}</span>
+
+				</div>
+			{% endfor %}
+		</div>
+		<div class="col2">
+			<div class="cart-row">
+				<span class="edit2-item cart-header cart-column">Quantity</span>
+			</div>
+			{% for i in itemlist %}
+				<div class="cart-row">
+						<div class="edit2-item cart-column">
+							<form action="/edititem" method="POST">
+							<input class="cart-quantity-input" name="qt" id="quantityof{{ i[1] }}" min="1" type="number" value="{{ i[2] }}">
+							<input type="hidden" value="{{ i[0] }}" name="edititemoid">
+							<input type="hidden" value="{{ i[1] }}" name="edititempid">
+							<input type="submit" class="btn btn-success" type="button" value="UPDATE">
+							</form>
+							<form action="/removeitem" method="POST">
+							<input type="hidden" value="{{ i[1] }}" name="removeitem">
+							<input type="hidden" value="{{ i[0] }}" name="orderidd">
+							<input type="submit" class="btn btn-danger" type="button" value="REMOVE">
+							</form>
+						</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+
+</div>		
+<div class="footer">
+	<div class="foot-content">@2019 SupaMaCat All reserved.
+	</div>
+</div>
+<script type="text/javascript">
+	var logins = '{{session['logged_in']}}';
+	var uaname = '{{session['username']}}';
+	var loginarea = document.getElementById('loginarea');
+	var registerarea = document.getElementById('registerarea');
+	var link = document.getElementById('registerarea');
+	if (logins == 'True'){
+		loginarea.innerHTML = "My Account" ;
+		registerarea.innerHTML = 'Logout'
+		link.setAttribute("href", "http://localhost:8000/logout");
+	}else{
+		loginarea.innerHTML = 'Login'
+		registerarea.innerHTML = 'Register'
+		link.setAttribute("href", "http://localhost:8000/register");
+	}
+</script>
+</body>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='cart.js') }}"></script>
+</html>
