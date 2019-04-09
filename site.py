@@ -532,7 +532,7 @@ def adminl():
 		return render_template('/adminpanel.html')
 	else:
 		flash('Wrong id or wrong password')
-		return render_template('/admin')
+		return render_template('/admin.html')
 @app.route('/admino')
 def admino():
 	if session['adminloggedin'] == True:
@@ -572,7 +572,7 @@ def rmoveu():
 	for i in allorder:
 		orderx = i[0]
 		cursor =db.cursor()
-		cursor.execute("""DELETE FROM Orders_Item WHERE (UserID, OrderID) = (%s, %s)""",(targetuid, orderx))
+		cursor.execute("""DELETE FROM Orders_Item WHERE (OrderID) = ( %s)""",(orderx))
 	cursor =db.cursor()
 	cursor.execute("""DELETE FROM Orders WHERE (UserID) = (%s)""",(targetuid))
 	cursor =db.cursor()

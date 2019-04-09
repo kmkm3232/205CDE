@@ -63,30 +63,30 @@
 Payment Method: {{ paymentmethod[0] }}</h1></p>
 <div class="container">
 		<div class="col1">
-			<div class="cart-row">
-				<span class="edit-item cart-header cart-column">Item</span>
-				<span class="edit-item cart-header cart-column">Price</span>
+			<div class="list-row">
+				<span class="list-item list-header list-column">Item</span>
+				<span class="list-item list-header list-column">Price</span>
 			</div>
 			{% for i in orderedproduct %}
-				<div class="cart-row">
-					<div class="edit-item cart-column">
+				<div class="list-row">
+					<div class="list-item list-column">
 						<input type="hidden" value="{{ i[2] }}" id="priceforcal{{ i[0] }}">
-						<span class="cart-item-title"id="nameof{{ i[0] }}" >{{ i[1] }}</span>
+						<span class="list-item-title"id="nameof{{ i[0] }}" >{{ i[1] }}</span>
 					</div>
-					<span class="edit-price cart-column" id="priceof{{ i[0] }}">${{ i[2] }}</span>
+					<span class="edit-price list-column" id="priceof{{ i[0] }}">${{ i[2] }}</span>
 
 				</div>
 			{% endfor %}
 		</div>
 		<div class="col2">
-			<div class="cart-row">
-				<span class="edit2-item cart-header cart-column">Quantity</span>
+			<div class="list-row">
+				<span class="edit2-item list-header list-column">Quantity</span>
 			</div>
 			{% for i in itemlist %}
-				<div class="cart-row">
-						<div class="edit2-item cart-column">
+				<div class="list-row">
+						<div class="edit2-item list-column">
 							<form action="/edititem" method="POST">
-							<input class="cart-quantity-input" name="qt" id="quantityof{{ i[1] }}" min="1" type="number" value="{{ i[2] }}">
+							<input class="list-quantity-input" name="qt" id="quantityof{{ i[1] }}" min="1" type="number" value="{{ i[2] }}">
 							<input type="hidden" value="{{ i[0] }}" name="edititemoid">
 							<input type="hidden" value="{{ i[1] }}" name="edititempid">
 							<input type="submit" class="btn btn-success" type="button" value="UPDATE">
