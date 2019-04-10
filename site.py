@@ -393,7 +393,7 @@ def rmia():
 		cursor =db.cursor()
 		cursor.execute("""DELETE FROM Orders WHERE (OrderID) = (%s)""",(int(targetoid)))
 		db.commit()
-		return redirect("http://localhost:8000/vieworder")
+		return redirect("http://localhost:8000/admino")
 	else:
 		cursor = db.cursor()
 		cursor.execute("""SELECT * FROM Orders WHERE (OrderID) = (%s)""",(targetoid))
